@@ -11,3 +11,4 @@ __pycache__/
 *.tfstate.*
 crash.log
 *.tfplan
+*.terraform.lock.hcl*
