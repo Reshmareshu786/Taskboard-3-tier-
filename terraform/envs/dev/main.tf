@@ -20,7 +20,7 @@ locals {
 
 module "resource_group" {
   source   = "../../modules/resource_group"
-  name     = "rg-${local.prefix}"
+  name     = "rg-${local.prefix}-${random_string.suffix.result}"
   location = var.location
   tags     = local.tags
 }
@@ -41,28 +41,14 @@ module "acr" {
   tags                = local.tags
 }
 
-module "postgresql" {
-  source              = "../../modules/postgresql"
-  server_name         = "psql-${local.prefix}-${random_string.suffix.result}"
-  location            = module.resource_group.location
-  resource_group_name = module.resource_group.name
-  vnet_id             = module.vnet.vnet_id
-  delegated_subnet_id = module.vnet.postgres_subnet_id
-  admin_username      = "taskboard"
-  admin_password      = random_password.pg_admin.result
-  database_name       = "taskboard"
-  tags                = local.tags
-}
-
 module "key_vault" {
   source              = "../../modules/key_vault"
   name                = "kv-${local.prefix}-${random_string.suffix.result}"
   location            = module.resource_group.location
   resource_group_name = module.resource_group.name
-  secret_names        = ["db-host", "db-name", "db-user", "db-password"]
+  secret_names        = ["db-name", "db-user", "db-password"]
   secret_values = {
-    "db-host"     = module.postgresql.fqdn
-    "db-name"     = module.postgresql.database_name
+    "db-name"     = "taskboard"
     "db-user"     = "taskboard"
     "db-password" = random_password.pg_admin.result
   }

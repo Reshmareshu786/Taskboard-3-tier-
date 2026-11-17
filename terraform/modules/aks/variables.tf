@@ -7,11 +7,11 @@ variable "acr_id" { type = string }
 variable "key_vault_id" { type = string }
 variable "node_count" {
   type    = number
-  default = 2
+  default = 1
 }
 variable "vm_size" {
   type    = string
-  default = "Standard_B2s"
+  default = "Standard_B2s_v2"
 }
 variable "tags" {
   type    = map(string)
